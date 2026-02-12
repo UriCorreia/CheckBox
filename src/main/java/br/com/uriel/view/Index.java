@@ -159,9 +159,40 @@ public class Index extends JFrame {
             cb.setFocusable(false);
 
             cb.addActionListener(e -> {
-                t.setConcluida(cb.isSelected());
-                new TasksDAO().update(t);
+
+                TasksDAO DAO = new TasksDAO();
+
+                if (cb.isSelected()) {
+
+                    t.setConcluida(true);
+                    DAO.update(t);
+
+                    cb.setText("<html><strike>" + t.getTitulo() + "</strike></html>");
+
+                    Timer timer = new Timer(5000, ev -> {
+                        DAO.delete(t.getId());
+                        renderizarTarefas();
+                    });
+
+                    timer.setRepeats(false);
+                    timer.start();
+
+                    cb.putClientProperty("deleteTimer", timer);
+
+                } else {
+
+                    t.setConcluida(false);
+                    DAO.update(t);
+
+                    cb.setText(t.getTitulo());
+
+                    Timer timer = (Timer) cb.getClientProperty("deleteTimer");
+                    if (timer != null) {
+                        timer.stop();
+                    }
+                }
             });
+
 
             card.addMouseListener(new java.awt.event.MouseAdapter() {
                 @Override

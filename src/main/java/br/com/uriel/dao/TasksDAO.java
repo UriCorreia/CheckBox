@@ -73,7 +73,7 @@ public class TasksDAO {
     }
 
     public void delete(int id){
-        String sql = "DELETE FROM tabelas WHERE id = ?";
+        String sql = "DELETE FROM tarefas WHERE id = ?";
 
         try(Connection conn = ConnectionFactory.getConnection();
             PreparedStatement stmt = conn.prepareStatement(sql)){
